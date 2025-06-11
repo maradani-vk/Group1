@@ -1,0 +1,33 @@
+name: SonarCloud
+
+on:
+  push:
+    branches:
+      - dev
+      - test
+
+jobs:
+  sonarcloud:
+    name: SonarCloud Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r Deployment/requirements.txt || echo "No requirements.txt found"
+
+      - name: Run SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          args: >
+            -Dsonar.projectKey=maradani-vk_Group1
+            -Dsonar.organization=maradani-vk
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
